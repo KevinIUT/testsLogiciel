@@ -4,8 +4,8 @@ import com.example.demo.data.Voiture;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -15,41 +15,47 @@ public class StatistiqueTests {
     StatistiqueImpl statistiqueImpl;
 
     @Test
-    void testAjouterVoiture() {
-        // On crée une voiture mockée
-        Voiture voiture = mock(Voiture.class);
+    public void testAjouterNouvelleVoiture() {
+        Voiture voiture = new Voiture("Skoda", 22_000);
 
-        // Définir un comportement simulé pour la méthode `getPrix()`
-        when(voiture.getPrix()).thenReturn(100_000);  // On spécifie que `getPrix()` retournera 100000
-
-        // Ajouter la voiture mockée
         statistiqueImpl.ajouter(voiture);
-
-        // Vérification que la méthode `ajouter()` a bien été appelée
         verify(statistiqueImpl, times(1)).ajouter(voiture);
+    }
+	// test
+    @Test
+    public void testPrixMoyenReel() {
+        Voiture voiture1 = new Voiture("Toyota", 15_000);
+        Voiture voiture2 = new Voiture("Lexus", 45_000);
 
-        // Vérification du prix retourné par la voiture mockée
-        assertEquals(100_000, voiture.getPrix(), "Le prix de la voiture doit être 100 000");
+        Statistique statistique = new StatistiqueImpl();
+
+        statistique.ajouter(voiture1);
+        statistique.ajouter(voiture2);
+
+        Echantillon echantillon = statistique.prixMoyen();
+
+        assertEquals(2, echantillon.getNombreDeVoitures());
+        assertEquals(30_000, echantillon.getPrixMoyen());
     }
 
     @Test
-    void testPrixMoyenAvecVoitureMockée() {
-        // On crée des voitures mockées
-        Voiture voiture1 = mock(Voiture.class);
-        Voiture voiture2 = mock(Voiture.class);
+    void testGetPrixSimple(){
+        Voiture voiture = new Voiture("Fiat", 9_500);
+        assertEquals(9_500, voiture.getPrix());
+    }
 
-        // Définir des comportements simulés pour `getPrix()`
-        when(voiture1.getPrix()).thenReturn(100_000);
-        when(voiture2.getPrix()).thenReturn(200_000);
+    @Test
+    void testPrixMoyenAvecMock(){
+        when(statistiqueImpl.prixMoyen()).thenReturn(new Echantillon(3, 12_000));
 
-        // Ajouter les voitures mockées
+        Voiture voiture1 = new Voiture("Dacia", 10_000);
+        Voiture voiture2 = new Voiture("Mazda", 12_000);
+        Voiture voiture3 = new Voiture("Suzuki", 14_000);
+
         statistiqueImpl.ajouter(voiture1);
         statistiqueImpl.ajouter(voiture2);
+        statistiqueImpl.ajouter(voiture3);
 
-        // Simuler le calcul du prix moyen
-        Echantillon echantillon = statistiqueImpl.prixMoyen();
-
-        // Vérification du prix moyen
-        assertEquals(150_000, echantillon.getPrixMoyen(), "Le prix moyen doit être de 150 000");
+        assertEquals(12_000, statistiqueImpl.prixMoyen().prixMoyen);
     }
 }
