@@ -11,7 +11,7 @@ public class VoitureTest {
 
     @Test
     void creerVoiture(){
-        assertEquals(2,2);
+        assertEquals(1,1);
     }
 
 }
