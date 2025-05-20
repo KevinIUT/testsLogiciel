@@ -16,7 +16,7 @@ public class StatistiqueTests {
 
     @Test
     void testPrixMoyenAvecVoitureMockée() {
-        // Création d'un mock de voiture
+        // / Création d'un mock de voiture
         Voiture voitureMock = mock(Voiture.class);
         when(voitureMock.getPrix()).thenReturn(100_000); // Le prix de la voiture est 100 000
 
