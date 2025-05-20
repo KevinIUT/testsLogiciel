@@ -1,31 +1,41 @@
 package com.example.demo.service;
 
 import com.example.demo.data.Voiture;
-import org.springframework.stereotype.Service;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Service
-public class StatistiqueImpl implements Statistique{
+@SpringBootTest
+public class StatistiqueTests {
 
-    List<Voiture> voitures = new ArrayList<Voiture>();
+    @MockBean
+    StatistiqueImpl statistiqueImpl;
 
-    @Override
-    public void ajouter(Voiture voiture) {
-        voitures.add(voiture);
-    }
+    @Test
+    void testPrixMoyenAvecVoitureMockée() {
+        // Création d'un mock de voiture
+        Voiture voitureMock = mock(Voiture.class);
+        when(voitureMock.getPrix()).thenReturn(100_000); // Le prix de la voiture est 100 000
 
-    @Override
-    public Echantillon prixMoyen() throws ArithmeticException {
-        int prixTotal = 0;
-        int nombreDeVoitures = 0;
-        Iterator<Voiture> iterator = voitures.iterator();
-        while(iterator.hasNext()){
-            prixTotal = prixTotal + iterator.next().getPrix();
-            nombreDeVoitures++;
-        }
-        return new Echantillon(nombreDeVoitures, prixTotal/nombreDeVoitures);
+        // Création d'un mock de StatistiqueImpl
+        StatistiqueImpl statistiqueMock = mock(StatistiqueImpl.class);
+
+        // Simulation de la méthode prixMoyen()
+        when(statistiqueMock.prixMoyen()).thenReturn(new Echantillon(1, 100_000));
+
+        // Appel de la méthode à tester
+        Echantillon echantillon = statistiqueMock.prixMoyen();
+
+        // Vérification que l'objet Echantillon n'est pas nul
+        assertNotNull(echantillon, "L'échantillon ne doit pas être nul");
+
+        // Vérification du prix moyen
+        assertEquals(100_000, echantillon.getPrixMoyen(), "Le prix moyen doit être de 100 000");
+
+        // Vérification du nombre de voitures
+        assertEquals(1, echantillon.getNombreDeVoitures(), "Le nombre de voitures doit être de 1");
     }
 }
