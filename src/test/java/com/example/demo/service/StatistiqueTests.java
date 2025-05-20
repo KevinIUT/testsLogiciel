@@ -4,6 +4,7 @@ import com.example.demo.data.Voiture;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.mockito.Mockito.*;
 
@@ -49,6 +50,7 @@ public class StatistiqueTests {
         Echantillon echantillon = statistiqueImpl.prixMoyen();
 
         // Vérification du prix moyen
-        assertEquals(150_000, echantillon.getMoyenne(), "Le prix moyen doit être de 150 000");
+
+        assertEquals(150_000, echantillon.getPrixMoyen(), "Le prix moyen doit être de 150 000");
     }
 }
